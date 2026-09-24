@@ -1,8 +1,8 @@
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from database.base import Base
-from enums import TechnicianAvailability
+from app.db.base import Base
+
 
 
 class Technician(Base):
@@ -24,9 +24,9 @@ class Technician(Base):
         nullable=False
     )
 
-    availability_status: Mapped[TechnicianAvailability] = mapped_column(
+    availability_status: Mapped[str] = mapped_column(
         String(30),
-        default=TechnicianAvailability.AVAILABLE
+        nullable=False
     )
 
     contact_reference: Mapped[str] = mapped_column(
@@ -34,12 +34,13 @@ class Technician(Base):
         nullable=True
     )
 
-    status: Mapped[str] = mapped_column(
-        String(20),
-        default="active"
-    )
-
     assignments = relationship(
         "MaintenanceAssignment",
+        back_populates="technician"
+    )
+
+    assigned_tickets = relationship(
+        "MaintenanceTicket",
+        foreign_keys="MaintenanceTicket.assigned_technician",
         back_populates="technician"
     )

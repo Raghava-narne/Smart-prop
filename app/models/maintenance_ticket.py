@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime,timezone
 
 from sqlalchemy import (
     String,
@@ -8,8 +8,8 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from database.base import Base
-from enums import TicketPriority, TicketStatus
+from app.db.base import Base
+
 
 
 class MaintenanceTicket(Base):
@@ -43,22 +43,28 @@ class MaintenanceTicket(Base):
         nullable=False
     )
 
-    priority: Mapped[TicketPriority] = mapped_column(
-        String(20),
-        default=TicketPriority.MEDIUM
-    )
-
-    status: Mapped[TicketStatus] = mapped_column(
+    priority: Mapped[str] = mapped_column(
         String(30),
-        default=TicketStatus.OPEN
+        nullable=False
     )
 
-    created_at: Mapped[datetime] = mapped_column(
+    status: Mapped[str] = mapped_column(
+        String(30),
+        default="open"
+    )
+
+    created_timestamp: Mapped[datetime] = mapped_column(
         DateTime,
-        default=datetime.utcnow
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False
     )
 
-    resolved_at: Mapped[datetime | None] = mapped_column(
+    assigned_technician_id: Mapped[int | None] = mapped_column(
+        ForeignKey("technicians.technician_id"),
+        nullable=True,
+    )
+
+    resolution_timestamp: Mapped[datetime | None] = mapped_column(
         DateTime,
         nullable=True
     )
@@ -73,8 +79,12 @@ class MaintenanceTicket(Base):
         back_populates="maintenance_tickets"
     )
 
+    technician = relationship(
+        "Technician",
+        foreign_keys = [assigned_technician] 
+    )
+
     assignments = relationship(
         "MaintenanceAssignment",
-        back_populates="ticket",
-        cascade="all, delete-orphan"
+        back_populates="ticket"
     )

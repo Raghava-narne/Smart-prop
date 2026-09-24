@@ -9,8 +9,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from database.base import Base
-from enums import RentStatus
+from app.db.base import Base
 
 
 class RentObligation(Base):
@@ -45,12 +44,13 @@ class RentObligation(Base):
 
     amount_paid: Mapped[Decimal] = mapped_column(
         Numeric(12, 2),
-        default=0
+        default=0,
+        nullable=False
     )
 
-    status: Mapped[RentStatus] = mapped_column(
-        String(20),
-        default=RentStatus.PENDING
+    status: Mapped[str] = mapped_column(
+        String(30),
+        nullable=False
     )
 
     agreement = relationship(
@@ -60,6 +60,5 @@ class RentObligation(Base):
 
     payments = relationship(
         "Payment",
-        back_populates="rent_obligation",
-        cascade="all, delete-orphan"
+        back_populates="rent_obligation"
     )

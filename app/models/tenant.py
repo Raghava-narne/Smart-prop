@@ -3,8 +3,8 @@ from datetime import date
 from sqlalchemy import String, Date
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from database.base import Base
-from enums import TenantStatus
+from app.db.base import Base
+
 
 
 class Tenant(Base):
@@ -28,14 +28,13 @@ class Tenant(Base):
         index=True
     )
 
-    phone: Mapped[str] = mapped_column(
+    phone_reference: Mapped[str] = mapped_column(
         String(20),
-        unique=True,
         nullable=False
     )
 
-    identity_reference: Mapped[str] = mapped_column(
-        String(100),
+    identity_reference: Mapped[str | None] = mapped_column(
+        String(255),
         nullable=True
     )
 
@@ -44,9 +43,9 @@ class Tenant(Base):
         nullable=False
     )
 
-    status: Mapped[TenantStatus] = mapped_column(
+    status: Mapped[str] = mapped_column(
         String(20),
-        default=TenantStatus.ACTIVE
+        nullable=False
     )
 
     rental_agreements = relationship(

@@ -1,21 +1,16 @@
 from datetime import datetime
 
-from sqlalchemy import (
-    String,
-    Integer,
-    DateTime,
-    JSON
-)
+from sqlalchemy import String, Integer, DateTime, JSON
 from sqlalchemy.orm import Mapped, mapped_column
 
-from database.base import Base
+from app.db.base import Base
 
 
 class AuditLog(Base):
-
     __tablename__ = "audit_logs"
 
     id: Mapped[int] = mapped_column(
+        Integer,
         primary_key=True,
         autoincrement=True
     )
@@ -42,10 +37,12 @@ class AuditLog(Base):
 
     timestamp: Mapped[datetime] = mapped_column(
         DateTime,
-        default=datetime.utcnow
+        default=datetime.now(timezone.utc),
+        nullable=False
     )
 
-    metadata: Mapped[dict | None] = mapped_column(
+    metadata_json: Mapped[dict | None] = mapped_column(
+        "metadata",
         JSON,
         nullable=True
     )

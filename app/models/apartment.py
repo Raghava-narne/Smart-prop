@@ -8,8 +8,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from database.base import Base
-from enums import ApartmentStatus
+from app.db.base import Base
 
 
 class Apartment(Base):
@@ -47,9 +46,9 @@ class Apartment(Base):
         nullable=False
     )
 
-    status: Mapped[ApartmentStatus] = mapped_column(
+    status: Mapped[str] = mapped_column(
         String(30),
-        default=ApartmentStatus.AVAILABLE
+        nullable=False
     )
 
     property = relationship(

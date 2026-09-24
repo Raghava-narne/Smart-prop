@@ -9,8 +9,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from database.base import Base
-from enums import AgreementStatus
+from app.db.base import Base
 
 
 class RentalAgreement(Base):
@@ -54,9 +53,9 @@ class RentalAgreement(Base):
         nullable=False
     )
 
-    status: Mapped[AgreementStatus] = mapped_column(
-        String(20),
-        default=AgreementStatus.ACTIVE
+    status: Mapped[str] = mapped_column(
+        String(30),
+        nullable=False
     )
 
     tenant = relationship(
@@ -71,6 +70,5 @@ class RentalAgreement(Base):
 
     rent_obligations = relationship(
         "RentObligation",
-        back_populates="agreement",
-        cascade="all, delete-orphan"
+        back_populates="agreement"
     )

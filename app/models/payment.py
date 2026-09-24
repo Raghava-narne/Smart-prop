@@ -1,20 +1,13 @@
 from datetime import date
 from decimal import Decimal
 
-from sqlalchemy import (
-    Date,
-    String,
-    Numeric,
-    ForeignKey
-)
+from sqlalchemy import Date, String, Numeric, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from database.base import Base
-from enums import PaymentMethod, PaymentStatus
+from app.db.base import Base
 
 
 class Payment(Base):
-
     __tablename__ = "payments"
 
     payment_id: Mapped[int] = mapped_column(
@@ -38,20 +31,19 @@ class Payment(Base):
         nullable=False
     )
 
-    payment_method: Mapped[PaymentMethod] = mapped_column(
-        String(30),
+    payment_method: Mapped[str] = mapped_column(
+        String(50),
         nullable=False
     )
 
     reference_number: Mapped[str] = mapped_column(
         String(100),
-        unique=True,
-        nullable=True
+        nullable=False
     )
 
-    status: Mapped[PaymentStatus] = mapped_column(
-        String(20),
-        default=PaymentStatus.SUCCESS
+    status: Mapped[str] = mapped_column(
+        String(30),
+        nullable=False
     )
 
     rent_obligation = relationship(

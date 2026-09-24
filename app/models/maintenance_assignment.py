@@ -1,15 +1,13 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import (
     DateTime,
     String,
-    Text,
     ForeignKey
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from database.base import Base
-from enums import AssignmentStatus
+from app.db.base import Base
 
 
 class MaintenanceAssignment(Base):
@@ -35,7 +33,8 @@ class MaintenanceAssignment(Base):
 
     assigned_at: Mapped[datetime] = mapped_column(
         DateTime,
-        default=datetime.utcnow
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False
     )
 
     unassigned_at: Mapped[datetime | None] = mapped_column(
@@ -43,14 +42,10 @@ class MaintenanceAssignment(Base):
         nullable=True
     )
 
-    status: Mapped[AssignmentStatus] = mapped_column(
+    status: Mapped[str] = mapped_column(
         String(30),
-        default=AssignmentStatus.ASSIGNED
-    )
-
-    notes: Mapped[str | None] = mapped_column(
-        Text,
-        nullable=True
+        nullable=False,
+        default="assigned"
     )
 
     ticket = relationship(

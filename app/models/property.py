@@ -1,8 +1,8 @@
 from sqlalchemy import String, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from database.base import Base
-from enums import PropertyStatus
+from app.db.base import Base
+
 
 
 class Property(Base):
@@ -14,18 +14,18 @@ class Property(Base):
         autoincrement=True
     )
 
-    owner_id: Mapped[int] = mapped_column(
-        nullable=False,
-        index=True
-    )
-
-    name: Mapped[str] = mapped_column(
+    property_name: Mapped[str] = mapped_column(
         String(150),
         nullable=False
     )
 
-    address: Mapped[str] = mapped_column(
+    address_reference: Mapped[str] = mapped_column(
         String(500),
+        nullable=False
+    )
+
+    owner_reference: Mapped[str] =  mapped _column(
+        String(255),
         nullable=False
     )
 
@@ -34,13 +34,12 @@ class Property(Base):
         default=0
     )
 
-    status: Mapped[PropertyStatus] = mapped_column(
-        String(20),
-        default=PropertyStatus.ACTIVE
+    status: Mapped[str] = mapped_column(
+        String(30),
+        nullable=False
     )
 
     apartments = relationship(
         "Apartment",
-        back_populates="property",
-        cascade="all, delete-orphan"
+        back_populates="property"
     )
