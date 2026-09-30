@@ -28,10 +28,8 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
         "https://smart-prop-client-3pq7y2ntk-raghava-narne.vercel.app",
-        "https://smart-prop-client-29bkvbm5y-raghava-narne.vercel.app"
+        "https://smart-prop-client.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
